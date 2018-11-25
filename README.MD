@@ -247,7 +247,35 @@ function BinaryTree() {
 }
 ```
 
-#### 7. 查找节点
+#### 7. 层次遍历
+建立一个队列，先将根节点入队，然后将队首出队，然后判断它的左右子树是否为空，不为空，则先将左子树入队，然后右子树入队。
+```JavaScript
+const levelTraverseNode = function(node, callback) {
+  if (!node) {
+    return
+  }
+
+  const queue = [];
+  // 指向当前节点的指针
+  let p = null;
+  queue.push(node);
+  while (queue.length) {
+    // 出队
+    p = queue.shift();
+
+    if (p.left) {
+      queue.push(p.left);
+    }
+    if (p.right) {
+      queue.push(p.right);
+    }
+
+    callback(p.key);
+  }
+}
+```
+
+#### 8. 查找节点
 ```JavaScript
 function BinaryTree() {
   // 省略上面部分代码...
@@ -273,7 +301,7 @@ function BinaryTree() {
 }
 ```
 
-#### 8. 删除节点
+#### 9. 删除节点
 ```JavaScript
 function BinaryTree() {
   // 省略上面部分代码...

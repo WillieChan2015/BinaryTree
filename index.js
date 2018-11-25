@@ -2,7 +2,7 @@
  * @Author: Mr.Chen
  * @Date: 2018-11-23 19:49:17
  * @LastEditors: Mr.Chen
- * @LastEditTime: 2018-11-25 20:44:02
+ * @LastEditTime: 2018-11-25 21:09:03
  * @Description: JS实现二叉树
  */
 function BinaryTree() {
@@ -149,6 +149,36 @@ function BinaryTree() {
     postorderTraverseNode2(root, callback);
   }
 
+  // 建立一个队列，先将根节点入队，然后将队首出队，然后判断它的左右子树是否为空，不为空，则先将左子树入队，然后右子树入队。
+  const levelTraverseNode = function(node, callback) {
+    if (!node) {
+      return
+    }
+
+    const queue = [];
+     // 指向当前节点的指针
+    let p = null;
+    queue.push(node);
+    while (queue.length) {
+      // 出队
+      p = queue.shift();
+
+      if (p.left) {
+        queue.push(p.left);
+      }
+      if (p.right) {
+        queue.push(p.right);
+      }
+
+      callback(p.key);
+    }
+  }
+
+  // 层次遍历
+  this.levelTraverse = function(callback) {
+    levelTraverseNode(root, callback);
+  }
+
   const minNode = function(node) {
     if (node) {
       while(node && node.left) {
@@ -258,7 +288,10 @@ nodes.forEach(key => {
 // binaryT.preorderTraverse(function(key) {
 //   console.log(key);
 // });
-binaryT.postorderTraverse(function(key) {
+// binaryT.postorderTraverse(function(key) {
+//   console.log(key);
+// });
+binaryT.levelTraverse(function(key) {
   console.log(key);
 });
 // console.log(binaryT.min());
