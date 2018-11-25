@@ -2,7 +2,7 @@
  * @Author: Mr.Chen
  * @Date: 2018-11-23 19:49:17
  * @LastEditors: Mr.Chen
- * @LastEditTime: 2018-11-25 21:09:03
+ * @LastEditTime: 2018-11-25 22:04:00
  * @Description: JS实现二叉树
  */
 function BinaryTree() {
@@ -32,6 +32,30 @@ function BinaryTree() {
       }
     }
   };
+  // 非递归插入节点
+  const insertNode2 = function(node, newNode) {
+    let curNode = node, parentNode = null;
+
+    while (curNode) {
+      parentNode = curNode;
+      if (newNode.key < curNode.key) {
+        curNode = curNode.left;
+      }
+      else if (newNode.key > curNode.key) {
+        curNode = curNode.right;
+      }
+      else {
+        return null;
+      }
+    }
+
+    if (parentNode.key > newNode.key) {
+      parentNode.left = newNode;
+    }
+    else {
+      parentNode.right = newNode;
+    }
+  };
 
   this.insert = function(key) {
     let newNode = new Node(key);
@@ -40,7 +64,7 @@ function BinaryTree() {
       root = newNode;
     }
     else {
-      insertNode(root, newNode);
+      insertNode2(root, newNode);
     }
   };
 
@@ -285,15 +309,15 @@ nodes.forEach(key => {
 // binaryT.inorderTraverse(function(key) {
 //   console.log(key);
 // });
-// binaryT.preorderTraverse(function(key) {
-//   console.log(key);
-// });
+binaryT.preorderTraverse(function(key) {
+  console.log(key);
+});
 // binaryT.postorderTraverse(function(key) {
 //   console.log(key);
 // });
-binaryT.levelTraverse(function(key) {
-  console.log(key);
-});
+// binaryT.levelTraverse(function(key) {
+//   console.log(key);
+// });
 // console.log(binaryT.min());
 // console.log(binaryT.max());
 // console.log(binaryT.getTree());
