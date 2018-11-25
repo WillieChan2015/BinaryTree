@@ -65,8 +65,9 @@ function BinaryTree() {
 ```
 
 #### 4.遍历二叉树
-##### 1. 中序遍历
+##### 4-1. 中序遍历
 中序遍历，简单来说，是 左-根-右。
+1. 递归中序遍历
 ```JavaScript
 function BinaryTree() {
   // 省略上面部分代码...
@@ -86,14 +87,34 @@ function BinaryTree() {
   }
 }
 ```
+2. 非递归中序遍历
+```JavaScript
+const inorderTraverseNode2 = function(node, callback) {
+  if (node) {
+    let stack = [];
+    while (node || stack.length) {
+      if (node) {
+        stack.push(node);
+        node = node.left;
+      }
+      else {
+        node = stack.pop();
+        callback(node.key);
+        node = node.right;
+      }
+    }
+  }
+}
+```
 
-##### 2. 前序遍历
-前序遍历简单来说就是， 根-左-右。
+##### 4-2. 先序遍历
+先序遍历简单来说就是， 根-左-右。
+1. 递归先序遍历
 ```JavaScript
 function BinaryTree() {
   // 省略上面部分代码...
 
-  // 前序遍历辅助函数
+  // 先序遍历辅助函数
   const preorderTraverseNode = function(node, callback) {
     if (node) {
       callback(node.key);
@@ -102,14 +123,33 @@ function BinaryTree() {
     }
   }
 
-  // 前序遍历
+  // 先序遍历
   this.preorderTraverse = function(callback) {
     preorderTraverseNode(root, callback);
   }
 }
 ```
+2. 非递归先序遍历
+```JavaScript
+const preorderTraverseNode2 = function(node, callback) {
+  if (node) {
+    let stack = [];
+    while (node || stack.length) {
+      if (node) {
+        stack.push(node);
+        callback(node.key);
+        node = node.left;
+      }
+      else {
+        node = stack.pop();
+        node = node.right;
+      }
+    }
+  }
+}
+```
 
-##### 3. 后序遍历
+##### 4-3. 后序遍历
 后序遍历简单来说就是， 左-右-根。
 1. 递归后续遍历
 ```JavaScript
