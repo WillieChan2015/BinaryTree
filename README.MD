@@ -65,7 +65,7 @@ function BinaryTree() {
 ```
 
 #### 4.遍历二叉树
-1. 中序遍历
+##### 1. 中序遍历
 中序遍历，简单来说，是 左-根-右。
 ```JavaScript
 function BinaryTree() {
@@ -87,7 +87,7 @@ function BinaryTree() {
 }
 ```
 
-2. 前序遍历
+##### 2. 前序遍历
 前序遍历简单来说就是， 根-左-右。
 ```JavaScript
 function BinaryTree() {
@@ -109,8 +109,9 @@ function BinaryTree() {
 }
 ```
 
-3. 后序遍历
+##### 3. 后序遍历
 后序遍历简单来说就是， 左-右-根。
+1. 递归后续遍历
 ```JavaScript
 function BinaryTree() {
   // 省略上面部分代码...
@@ -127,6 +128,41 @@ function BinaryTree() {
   // 后序遍历
   this.postorderTraverse = function(callback) {
     postorderTraverseNode(root, callback);
+  }
+}
+```
+
+2. 非递归后续遍历
+    要保证根结点在左孩子和右孩子访问之后才能访问，因此对于任一结点P，先将其入栈。如果P不存在左孩子和右孩子，则可以直接访问它；或者P存在左孩子或者右孩子，但是其左孩子和右孩子都已被访问过了，则同样可以直接访问该结点。若非上述两种情况，则将P的右孩子和左孩子依次入栈，这样就保证了每次取栈顶元素的时候，左孩子在右孩子前面被访问，左孩子和右孩子都在根结点前面被访问。
+```JavaScript
+const postorderTraverseNode2 = function(node, callback) {
+  if (node) {
+    const stack = [];
+    let curNode = null, preNode = null;
+
+    stack.push(node);
+    while (stack.length) {
+      // curNode = null;
+      curNode = stack[stack.length - 1];
+
+      if (
+        (!curNode.left && !curNode.right) ||
+        (preNode === curNode.left || preNode === curNode.right)
+      ) {
+        callback(curNode.key);
+        preNode = curNode;
+        // curNode = stack.pop();
+        stack.pop();
+      }
+      else {
+        if (curNode.right) {
+          stack.push(curNode.right);
+        }
+        if (curNode.left) {
+          stack.push(curNode.left);
+        }
+      }
+    }
   }
 }
 ```

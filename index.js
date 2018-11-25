@@ -2,7 +2,7 @@
  * @Author: Mr.Chen
  * @Date: 2018-11-23 19:49:17
  * @LastEditors: Mr.Chen
- * @LastEditTime: 2018-11-25 20:08:06
+ * @LastEditTime: 2018-11-25 20:44:02
  * @Description: JS实现二叉树
  */
 function BinaryTree() {
@@ -105,6 +105,37 @@ function BinaryTree() {
       callback(node.key);
     }
   }
+  // 非递归后续遍历
+  const postorderTraverseNode2 = function(node, callback) {
+    if (node) {
+      const stack = [];
+      let curNode = null, preNode = null;
+
+      stack.push(node);
+      while (stack.length) {
+        // curNode = null;
+        curNode = stack[stack.length - 1];
+
+        if (
+          (!curNode.left && !curNode.right) ||
+          (preNode === curNode.left || preNode === curNode.right)
+        ) {
+          callback(curNode.key);
+          preNode = curNode;
+          // curNode = stack.pop();
+          stack.pop();
+        }
+        else {
+          if (curNode.right) {
+            stack.push(curNode.right);
+          }
+          if (curNode.left) {
+            stack.push(curNode.left);
+          }
+        }
+      }
+    }
+  }
 
   this.inorderTraverse = function(callBack) {
     inorderTraverseNode2(root, callBack);
@@ -115,7 +146,7 @@ function BinaryTree() {
   }
 
   this.postorderTraverse = function(callback) {
-    postorderTraverseNode(root, callback);
+    postorderTraverseNode2(root, callback);
   }
 
   const minNode = function(node) {
@@ -224,12 +255,12 @@ nodes.forEach(key => {
 // binaryT.inorderTraverse(function(key) {
 //   console.log(key);
 // });
-binaryT.preorderTraverse(function(key) {
-  console.log(key);
-});
-// binaryT.postorderTraverse(function(key) {
+// binaryT.preorderTraverse(function(key) {
 //   console.log(key);
 // });
+binaryT.postorderTraverse(function(key) {
+  console.log(key);
+});
 // console.log(binaryT.min());
 // console.log(binaryT.max());
 // console.log(binaryT.getTree());
