@@ -2,7 +2,7 @@
  * @Author: Willie Chen
  * @LastEditors: Willie Chen
  * @Date: 2021-10-19 22:20:57
- * @LastEditTime: 2021-10-19 23:08:18
+ * @LastEditTime: 2021-10-20 22:54:33
  * @Description: 二叉树
  */
 
@@ -23,10 +23,14 @@ class BinNode {
 }
 
 class BinTree {
-  public root: null | BinNode;
+  private root: null | BinNode;
 
   constructor () {
     this.root = null;
+  }
+
+  get tree () {
+    return this.root;
   }
 
   /**
@@ -53,7 +57,7 @@ class BinTree {
    */
   insert (key: number) {
     // 新建 Node 的实例
-    const node = new Node(key);
+    const node = new BinNode(key);
     // 当根节点为空时
     if (!this.root) {
       this.root = node;
@@ -166,6 +170,121 @@ class BinTree {
   }
 
   /**
-   * todo 非递归后续遍历
+   * 非递归后续遍历
+   * @description 要保证根结点在左孩子和右孩子访问之后才能访问，因此对于任一结点P，先将其入栈。
+   * 如果P不存在左孩子和右孩子，则可以直接访问它；或者P存在左孩子或者右孩子，但是其左孩子和右孩子都已被访问过了，则同样可以直接访问该结点。
+   * 若非上述两种情况，则将P的右孩子和左孩子依次入栈，这样就保证了每次取栈顶元素的时候，左孩子在右孩子前面被访问，左孩子和右孩子都在根结点前面被访问。
    */
+  postOrderTraverse2 (cb: ICommonCallback) {
+    if (!this.root) {
+      return;
+    }
+
+    const stack: BinNode[] = [];
+    let current: BinNode | null = null;
+    let pre: BinNode | null = null;
+
+    stack.push(this.root);
+
+    while (stack.length) {
+      current = stack[stack.length - 1];
+
+      if (
+        (!current.left && !current.right) || 
+        (pre === current.left || pre === current.right)
+      ) {
+        cb(current.key);
+        pre = current;
+        stack.pop();
+      } else {
+        if (current.right) {
+          stack.push(current.right);
+        }
+        if (current.left) {
+          stack.push(current.left);
+        }
+      }
+    }
+  }
+
+  /**
+   * 查找最小节点值
+   */
+  get min () {
+    if (!this.root) {
+      return null;
+    }
+
+    let node = this.root;
+    while (node && node.left) {
+      node = node.left;
+    }
+    return node.key;
+  }
+
+  /**
+   * 查找最大节点值
+   */
+  get max () {
+    if (!this.root) {
+      return null;
+    }
+
+    let node = this.root;
+    while (node && node.right) {
+      node = node.right;
+    }
+    return node.key;
+  }
+
+  /**
+   * 层次遍历
+   * @description 建立一个队列，先将根节点入队，然后将队首出队，然后判断它的左右子树是否为空，不为空，则先将左子树入队，然后右子树入队。
+   */
+  levelTraverseNode (cb: ICommonCallback) {
+    if (!this.root) {
+      return;
+    }
+
+    const queue: BinNode[] = [this.root];
+    while (queue.length) {
+      const node = queue.shift()!;
+      cb(node.key);
+
+      if (node.left) {
+        queue.push(node.left);
+      }
+      if (node.right) {
+        queue.push(node.right);
+      }
+    }
+  }
+
+  /**
+   * 深度遍历
+   */
+  deepTraverseNode (cb: ICommonCallback) {
+    this.preOrderTraverse2(cb);
+  }
+
+  /**
+   * 查找节点
+   */
+  search (key: number) {
+    let node = this.root;
+    while (node) {
+      if (node.key === key) {
+        return true;
+      }
+
+      node = key > node.key ? node.right : node.left;
+    }
+    return false;
+  }
 }
+
+const tree = new BinTree();
+[20, 15, 25, 10, 16, 23, 14, 13].forEach(key => tree.insert(key));
+const log = console.log.bind(console);
+log(tree.search(10), tree.search(11));
+log(tree.max, tree.min);
